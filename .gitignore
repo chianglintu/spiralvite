@@ -1,0 +1,12 @@
+/.*/
+!/.github
+/vendor
+/runtime/
+*/runtime/
+
+/rr*
+/protoc-gen-php-grpc*
+
+/.env
+/*.cache
+/.worktrees/
