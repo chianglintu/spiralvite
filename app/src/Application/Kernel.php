@@ -156,6 +156,7 @@ class Kernel extends \Spiral\Framework\Kernel
             Bootloader\PersistenceBootloader::class,
 
             // Application domain
+            Bootloader\ViteBootloader::class,
             Bootloader\AppBootloader::class,
         ];
     }
