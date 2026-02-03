@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@source "../../app/views";
+
+@theme {
+    --font-sans: "Montserrat", "ChocolateClassicalSans", "Microsoft JhengHei", "PingFang TC", "Noto Sans CJK TC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    --color-primary: #614df7;
+    --text-thin: 13px;
+    --radius-thin: 2.5px;
+    --border-width-thin: 1.5px;
+}
+

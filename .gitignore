@@ -3,6 +3,7 @@
 /vendor
 /runtime/
 */runtime/
+/node_modules/
 
 /rr*
 /protoc-gen-php-grpc*
