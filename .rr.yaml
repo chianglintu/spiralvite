@@ -13,6 +13,7 @@ http:
             - .htaccess
     pool:
         num_workers: 1
+        max_jobs: 1
         supervisor:
             max_worker_memory: 100
 server:

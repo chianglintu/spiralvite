@@ -36,9 +36,9 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       input: [
-        'resources/js/app.js',
-        'resources/css/tailwind.css',
         'resources/css/fonts.css',
+        'resources/css/tailwind.css',
+        'resources/js/app.js',
       ],
     },
   },

@@ -4,16 +4,19 @@
 <title>{% block title %}{% endblock %}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {% block styles %}
-    {{ vite([
-        'resources/js/app.js',
-        'resources/css/tailwind.css',
-        'resources/css/fonts.css',
-    ]) }}
+{{ vite([
+'resources/css/fonts.css',
+'resources/css/tailwind.css',
+]) }}
 {% endblock %}
 </head>
 <body>
 {% block body %}{% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}
+{{ vite([
+'resources/js/app.js',
+]) }}
+{% endblock %}
 </body>
 <hidden>{{ context }}</hidden>
 </html>
