@@ -89,13 +89,13 @@ final class Vite
                 continue;
             }
             if (\str_ends_with($file, '.css')) {
-                $styles[] = $this->assetRef($buildDir, $file, $inline, true);
+                $styles[] = $this->assetRef($buildDir, $file, $inline);
             } else {
-                $scripts[] = $this->assetRef($buildDir, $file, $inline, false);
+                $scripts[] = $this->assetRef($buildDir, $file, $inline);
             }
 
             foreach ($chunk['css'] ?? [] as $cssFile) {
-                $styles[] = $this->assetRef($buildDir, $cssFile, $inline, true);
+                $styles[] = $this->assetRef($buildDir, $cssFile, $inline);
             }
             foreach ($chunk['imports'] ?? [] as $importKey) {
                 if (isset($manifest[$importKey]['file'])) {
@@ -104,8 +104,8 @@ final class Vite
             }
         }
 
-        $styles = array_values(array_unique($styles));
-        $scripts = array_values(array_unique($scripts));
+        $styles = $this->uniqueAssets($styles);
+        $scripts = $this->uniqueAssets($scripts);
         $preloads = array_values(array_unique($preloads));
 
         return [$scripts, $styles, $preloads];
@@ -117,16 +117,22 @@ final class Vite
         return $prefix . '/' . trim($buildDir . '/' . $file, '/');
     }
 
-    private function assetRef(string $buildDir, string $file, bool $inline, bool $isCss): string
+    private function assetRef(string $buildDir, string $file, bool $inline): array
     {
         if (!$inline) {
-            return $this->assetUrl($buildDir, $file);
+            return [
+                'type' => 'url',
+                'value' => $this->assetUrl($buildDir, $file),
+            ];
         }
         $path = $this->config['public_dir'] . '/' . $buildDir . '/' . $file;
         if (!\is_file($path)) {
             throw new \RuntimeException("Vite asset not found: {$path}");
         }
-        return (string) \file_get_contents($path);
+        return [
+            'type' => 'inline',
+            'value' => rtrim((string) \file_get_contents($path), "\n"),
+        ];
     }
 
     private function renderTags(array $scripts, array $styles, array $preloads): string
@@ -136,20 +142,35 @@ final class Vite
             $tags[] = '<link rel="modulepreload" href="' . $href . '">';
         }
         foreach ($styles as $style) {
-            if (\str_starts_with($style, '/*') || \str_contains($style, '{')) {
-                $tags[] = '<style>' . $style . '</style>';
+            if ($style['type'] === 'inline') {
+                $tags[] = '<style>' . $style['value'] . '</style>';
             } else {
-                $tags[] = '<link rel="stylesheet" href="' . $style . '">';
+                $tags[] = '<link rel="stylesheet" href="' . $style['value'] . '">';
             }
         }
         foreach ($scripts as $script) {
-            if (\str_contains($script, 'console') || \str_contains($script, 'import')) {
-                $tags[] = '<script type="module">' . $script . '</script>';
+            if ($script['type'] === 'inline') {
+                $tags[] = '<script type="module">' . $script['value'] . '</script>';
             } else {
-                $tags[] = '<script type="module" src="' . $script . '"></script>';
+                $tags[] = '<script type="module" src="' . $script['value'] . '"></script>';
             }
         }
         return implode("\n", $tags);
+    }
+
+    private function uniqueAssets(array $assets): array
+    {
+        $seen = [];
+        $unique = [];
+        foreach ($assets as $asset) {
+            $key = $asset['type'] . ':' . $asset['value'];
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
+            $unique[] = $asset;
+        }
+        return $unique;
     }
 
     private function devTags(array $entries, string $buildDir): string
