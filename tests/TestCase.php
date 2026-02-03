@@ -39,11 +39,15 @@ class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         $this->beforeBooting(static function (ConfiguratorInterface $config): void {
-            if (!$config->exists('session')) {
-                return;
+            if ($config->exists('session')) {
+                $config->modify('session', new Set('handler', null));
             }
 
-            $config->modify('session', new Set('handler', null));
+            $config->modify('vite', new Set('public_dir', __DIR__ . '/Fixtures/vite'));
+            $config->modify('vite', new Set('build_dir', 'build'));
+            $config->modify('vite', new Set('manifest', '.vite/manifest.json'));
+            $config->modify('vite', new Set('hot_file', 'hot'));
+            $config->modify('vite', new Set('asset_url', ''));
         });
 
         parent::setUp();
