@@ -25,11 +25,13 @@ function hotFilePlugin() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/build/' : '/',
   plugins: [
     tailwindcss(),
     hotFilePlugin(),
   ],
+  publicDir: false,
   build: {
     outDir: 'public/build',
     manifest: true,
@@ -42,4 +44,4 @@ export default defineConfig({
       ],
     },
   },
-})
+}))
