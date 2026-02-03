@@ -11,3 +11,5 @@
 /.env
 /*.cache
 /.worktrees/
+/public/build/
+/public/hot
