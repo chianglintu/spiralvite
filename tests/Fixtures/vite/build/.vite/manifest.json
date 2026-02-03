@@ -1,0 +1,18 @@
+{
+  "resources/js/app.js": {
+    "file": "assets/app-abc123.js",
+    "css": ["assets/app-abc123.css"],
+    "imports": ["_vendor-xyz.js"]
+  },
+  "_vendor-xyz.js": {
+    "file": "assets/vendor-xyz.js"
+  },
+  "resources/css/tailwind.css": {
+    "file": "assets/tailwind-111.css",
+    "isEntry": true
+  },
+  "resources/css/fonts.css": {
+    "file": "assets/fonts-222.css",
+    "isEntry": true
+  }
+}
